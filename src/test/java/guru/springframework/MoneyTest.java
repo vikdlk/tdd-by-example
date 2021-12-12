@@ -6,32 +6,36 @@ import org.junit.jupiter.api.Test;
 public class MoneyTest {
 
     @Test
-    void testMultiplicationDollar() {
-        Dollar five = new Dollar(5);
-        Dollar product = five.times(2);
-        Assertions.assertEquals(new Dollar(10), product);
-        product = five.times(3);
-        Assertions.assertEquals(new Dollar(15), product);
+    void testMultiplication() {
+        Money five = Money.dollar(5);
+        Assertions.assertEquals(Money.dollar(10), five.times(2));
+        Assertions.assertEquals(Money.dollar(15), five.times(3));
+
+        Money fiveF = Money.franc(5);
+        Assertions.assertEquals(Money.franc(10), fiveF.times(2));
     }
 
     @Test
     void testEqualityDollar() {
-        Assertions.assertEquals(new Dollar(5), new Dollar(5));
-        Assertions.assertNotEquals(new Dollar(5), new Dollar(8));
-    }
-    @Test
-    void testMultiplicationFranc() {
-        Franc five = new Franc(5);
-        Franc product = five.times(2);
-        Assertions.assertEquals(new Franc(10), product);
-        product = five.times(3);
-        Assertions.assertEquals(new Franc(15), product);
+        Assertions.assertEquals(Money.dollar(5), Money.dollar(5));
+        Assertions.assertNotEquals(Money.dollar(5), Money.dollar(8));
+        Assertions.assertEquals(Money.franc(5), Money.franc(5));
+        Assertions.assertNotEquals(Money.dollar(5), Money.franc(5));
     }
 
     @Test
-    void testEqualityFranc() {
-        Assertions.assertEquals(new Franc(5), new Franc(5));
-        Assertions.assertNotEquals(new Franc(5), new Franc(8));
+    void testCurrency() {
+        Assertions.assertEquals("USA", Money.dollar(1).currency());
+        Assertions.assertEquals("CHF", Money.franc(1).currency());
+    }
+
+    @Test
+    void testSimpleAddition() {
+        Money five = Money.dollar(5);
+        Expression sum = five.plus(five);
+        Bank bank = new Bank();
+        Money reduced = bank.reduce(sum, "USD");
+        Assertions.assertEquals(Money.dollar(10), reduced);
     }
 
 }
