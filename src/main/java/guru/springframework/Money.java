@@ -28,6 +28,13 @@ public class Money implements Expression {
     }
 
     @Override
+    public Money reduce(Bank bank, String to) {
+//        return this;
+        int rate = (currency.equals("CHF") && to.equals("USA") ? 2 : 1);
+        return new Money(amount / rate, to);
+    }
+
+    @Override
     public String toString() {
         return "Money{" +
                 "amount=" + amount +
@@ -39,7 +46,7 @@ public class Money implements Expression {
         return new Money(amount * multiplier, this.currency);
     }
 
-    public Expression plus(Money addend){
-        return new Money(amount + addend.amount, currency);
+    public Expression plus(Money addend) {
+        return new Sum(this, addend);
     }
 }

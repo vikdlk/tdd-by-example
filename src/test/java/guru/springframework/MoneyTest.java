@@ -25,7 +25,7 @@ public class MoneyTest {
 
     @Test
     void testCurrency() {
-        Assertions.assertEquals("USA", Money.dollar(1).currency());
+        Assertions.assertEquals("USD", Money.dollar(1).currency());
         Assertions.assertEquals("CHF", Money.franc(1).currency());
     }
 
@@ -38,4 +38,41 @@ public class MoneyTest {
         Assertions.assertEquals(Money.dollar(10), reduced);
     }
 
+    @Test
+    void testPlusReturnSum() {
+        Money five = Money.dollar(5);
+        Expression result = five.plus(five);
+        Sum sum = (Sum) result;
+        Assertions.assertEquals(five, sum.augmend);
+        Assertions.assertEquals(five, sum.addmend);
+    }
+
+    @Test
+    void testReduceSum() {
+        Expression sum = new Sum(Money.dollar(3), Money.dollar(4));
+        Bank bank = new Bank();
+        Money result = bank.reduce(sum, "USD");
+        Assertions.assertEquals(Money.dollar(7), result);
+    }
+
+    @Test
+    void testReduceMoney() {
+        Bank bank = new Bank();
+        Money result = bank.reduce(Money.dollar(1), "USD");
+        Assertions.assertEquals(Money.dollar(1), result);
+    }
+
+    @Test
+    void testReduceMoneyDifferentCurrency() {
+        Bank bank = new Bank();
+        bank.addRate("CHF", "USD", 2);
+        Money result = bank.reduce(Money.franc(2), "USD");
+        Assertions.assertEquals(Money.dollar(1), result);
+    }
+
+    @Test
+    void testIdentityRate() {
+        Assertions.assertEquals(1, new Bank().rate("USD", "USD"));
+        Assertions.assertEquals(1, new Bank().rate("CHF", "CHF"));
+    }
 }
