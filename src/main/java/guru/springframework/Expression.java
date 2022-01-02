@@ -1,6 +1,7 @@
 package guru.springframework;
 
 public interface Expression {
+    Money reduce(Bank bank, String to);
 
-    Money reduce(String to, Bank bank);
+    public Expression plus(Expression addend);
 }
